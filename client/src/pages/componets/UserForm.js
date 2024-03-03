@@ -1,4 +1,4 @@
-import { Grid, makeStyles, Paper, Snackbar } from "@mui/material";
+import { Button, Grid, makeStyles, Paper, Snackbar } from "@mui/material";
 import { useState } from "react";
 import Confirm from "./Confirm";
 import FormPersonalDetails from "./FormPersonalDetails";
@@ -10,109 +10,135 @@ import FormProjectsDetails from "./FormProjectsDetails";
 import FormSkillsDetails from "./FormSkillsDetails";
 import axios from "axios";
 const UserForm = () => {
-  // styles hook
-  const [openMessage, setOpenMessage] = useState(false); // error message open state
-  // form state - step + values.
+  const [openMessage, setOpenMessage] = useState(false);
   const [formValues, setFormValues] = useState({
     step: 1,
-    firstName: "",
-    lastName: "",
-    email: "",
-    address: "",
-    website: "",
-    linkedin: "",
-    number: "",
-    github: "",
-    college: "",
-    collegefromyear1: "",
-    collegetoyear1: "",
-    collegequalification1: "",
-    collegedescription1: "",
-    school: "",
-    schoolfromyear2: "",
-    schooltoyear2: "",
-    schoolqualification2: "",
-    schooldescription2: "",
-    company1: "",
-    company1fromyear1: "",
-    company1toyear1: "",
-    company1designation: "",
-    companydescription1: "",
-    company2: "",
-    company2fromyear2: "",
-    company2toyear2: "",
-    company2designation: "",
-    companydescription2: "",
-    project1: "",
-    project1fromyear1: "",
-    project1toyear1: "",
-    project1designation: "",
-    projectdescription1: "",
-    project2: "",
-    project2fromyear2: "",
-    project2toyear2: "",
-    project2designation: "",
-    projectdescription2: "",
-    skill1:"",
-    skilldescription1:"",
-    skill2:"",
-    skilldescription2:"",
-    skill3:"",
-    skilldescription3:"",
-    skill4:"",
-    skilldescription4:"",
+    firstName: '',
+    lastName: '',
+    email: '',
+    address: '',
+    website: '',
+    linkedin: '',
+    number: '',
+    github: '',
+    college: '',
+    collegefromyear1: '',
+    collegetoyear1: '',
+    collegequalification1: '',
+    collegedescription1: '',
+    school: '',
+    schoolfromyear2: '',
+    schooltoyear2: '',
+    schoolqualification2: '',
+    schooldescription2: '',
+    experiences: [
+      {
+        company: '',
+        fromYear: '',
+        toYear: '',
+        designation: '',
+        description: '',
+      },
+    ],
+    project1: '',
+    project1fromyear1: '',
+    project1toyear1: '',
+    project1designation: '',
+    projectdescription1: '',
+    project2: '',
+    project2fromyear2: '',
+    project2toyear2: '',
+    project2designation: '',
+    projectdescription2: '',
+    skill1: '',
+    skilldescription1: '',
+    skill2: '',
+    skilldescription2: '',
+    skill3: '',
+    skilldescription3: '',
+    skill4: '',
+    skilldescription4: '',
   });
-
-  // proceed to next step
+// Add handleChange function here
+const handleChange = (index, fieldName, value) => {
+  setFormValues((prevState) => {
+    const updatedExperiences = [...prevState.experiences];
+    updatedExperiences[index] = {
+      ...updatedExperiences[index],
+      [fieldName]: value,
+    };
+    return { ...prevState, experiences: updatedExperiences };
+  });
+};
   const nextStep = () => {
-    const { step, firstName, lastName, email, number, college, school } =
-      formValues;
-    // input validation if empty (step 1 & 2)
+    const { step, firstName, lastName, email, number, college, school } = formValues;
+
+    // Step 1 validation
     if (step === 1) {
-      if (firstName === "" || lastName === "" || email === "" || number === "")
-        return setOpenMessage(true);
+      if (firstName === '' || lastName === '' || email === '' || number === '') {
+        return setOpenMessage(true); // Display error message
+      }
     }
+
+    // Step 2 validation
     if (step === 2) {
-      if (college === "" || school === "") return setOpenMessage(true);
+      if (college === '' || school === '') {
+        return setOpenMessage(true); // Display error message
+      }
     }
-    if (step === 3) {
-      if (college === "" || school === "") return setOpenMessage(true);
-    }
-    if (step === 4) {
-      if (college === "" || school === "") return setOpenMessage(true);
-    }
-    // continue if all okay.
-    setFormValues((state) => ({ ...state, step: step + 1 }));
+
+    // Additional validation for other steps if needed...
+
+    // Proceed to the next step
+    setFormValues((prevState) => ({ ...prevState, step: step + 1 }));
   };
 
-  // go back
   const prevStep = () => {
     const { step } = formValues;
-    setFormValues((state) => ({ ...state, step: step - 1 }));
+
+    // Step decrement logic
+    if (step > 1) {
+      setFormValues((prevState) => ({ ...prevState, step: step - 1 }));
+    }
   };
- 
 
-  // handle fields change
+  const handleAddExperience = () => {
+    setFormValues((prevState) => ({
+      ...prevState,
+      experiences: [
+        ...prevState.experiences,
+        {
+          company: '',
+          fromYear: '',
+          toYear: '',
+          designation: '',
+          description: '',
+        },
+      ],
+    }));
+  };
 
-  // sets the error message to false. gets triggered by the component itself after 3000ms
+  const handleRemoveExperience = (index) => {
+    setFormValues((prevState) => ({
+      ...prevState,
+      experiences: prevState.experiences.filter((_, i) => i !== index),
+    }));
+  };
+
   const handleClose = () => setOpenMessage(false);
-  console.log(formValues);
+
   return (
     <>
-      {/* <TopAppBar step={formValues.step} /> */}
-      <Grid container justifyContent="center" alignItems="center" style={{}}>
+      <Grid container justifyContent="center" alignItems="center">
         <Grid
           item
           sx={{
             boxShadow: 1,
-
-            display: "flex",
-            flexDirection: "column",
-            justifyContent: "space-between", // Align items at the bottom
-            // height: "50vh", // Height of the container
-            width: "800px",
-            // Width of the container
-            padding: "20px",
+            display: 'flex',
+            flexDirection: 'column',
+            justifyContent: 'space-between',
+            width: '800px',
+            padding: '20px',
           }}
         >
           <div style={{ flex: 1 }}>
@@ -129,20 +155,38 @@ const UserForm = () => {
               />
             )}
             {formValues.step === 3 && (
-              <FormExperienceDetails
-                formValues={formValues}
-                setFormValues={setFormValues}
-              />
+              <>
+                {formValues.experiences.map((experience, index) => (
+                  <FormExperienceDetails
+                    key={index}
+                    experience={experience}
+                    index={index}
+                    formValues={formValues}
+                    handleChange={(fieldName, value) =>
+                      // eslint-disable-next-line no-undef
+                      handleChange(index, fieldName, value)
+                    }
+                    handleRemoveExperience={handleRemoveExperience}
+                  />
+                ))}
+                <Button
+                  variant="contained"
+                  color="primary"
+                  onClick={handleAddExperience}
+                >
+                  Add Experience
+                </Button>
+              </>
             )}
             {formValues.step === 4 && (
               <FormProjectsDetails
-              formValues={formValues}
+                formValues={formValues}
                 setFormValues={setFormValues}
               />
             )}
             {formValues.step === 5 && (
               <FormSkillsDetails
-              formValues={formValues}
+                formValues={formValues}
                 setFormValues={setFormValues}
               />
             )}
@@ -152,16 +196,28 @@ const UserForm = () => {
             )}
           </div>
           <br />
-          <div style={{ alignSelf: "flex-end", width: "100%" }}>
-            <StepButtons
-              nextStep={nextStep}
-              prevStep={prevStep}
-             
-              currentStep={formValues.step}
-            />
+          <div style={{ alignSelf: 'flex-end', width: '100%' }}>
+            {/* Buttons for navigating through steps */}
+            <Button
+              variant="contained"
+              color="primary"
+              onClick={nextStep}
+              style={{ marginRight: '10px' }}
+            >
+              Next
+            </Button>
+            <Button
+              variant="contained"
+              color="secondary"
+              onClick={prevStep}
+              style={{ marginRight: '10px' }}
+            >
+              Back
+            </Button>
           </div>
         </Grid>
 
+        {/* Snackbar for displaying error message */}
         <Snackbar
           open={openMessage}
           onClose={handleClose}
@@ -172,5 +228,7 @@ const UserForm = () => {
     </>
   );
 };
+
+
 
 export default UserForm;
