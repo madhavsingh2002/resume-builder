@@ -90,37 +90,7 @@ const UserForm = () => {
     const { step } = formValues;
     setFormValues((state) => ({ ...state, step: step - 1 }));
   };
-  // fake "submit" handlde.
-  const submitHandle = () => {
-    const { step, /* other form values */ } = formValues;
-    setFormValues((state) => ({ ...state, step: step + 1 }));
-
-    // Assuming you have the formData object containing your form data
-
-    // Make a POST request to create-pdf endpoint
-    /* 
-    axios.post("http://localhost:4000/create-pdf", formValues)
-      .then(() => {
-        // After successful PDF creation, make a GET request to fetch-pdf endpoint
-        return axios.get("http://localhost:4000/fetch-pdf", { responseType: "blob" });
-      })
-      .then((res) => {
-        // Create a Blob object from the response data
-        const pdfBlob = new Blob([res.data], { type: "application/pdf" });
-        
-        // Check if the response status is 200 and set the success state accordingly
-        // setSuccess(res.status === 200);
-
-        // Save the Blob as a PDF file
-        // saveAs(pdfBlob, "Resume.pdf");
-      })
-      .catch((error) => {
-        // Handle errors here
-        console.error("Error creating or fetching PDF:", error);
-      });
-      */
-};
-
+ 
 
   // handle fields change
 
@@ -186,7 +156,7 @@ const UserForm = () => {
             <StepButtons
               nextStep={nextStep}
               prevStep={prevStep}
-              submitHandle={submitHandle}
+             
               currentStep={formValues.step}
             />
           </div>
